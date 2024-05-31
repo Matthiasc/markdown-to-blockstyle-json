@@ -22,6 +22,7 @@ const defaultRenderFunctions = Object.freeze({
   table: renderTable,
   delimiter: renderDelimiter,
   html: renderHtml,
+  callout: renderCallout,
 });
 
 export function render(
@@ -68,12 +69,19 @@ ${block.data.items.map((item) => `<li>${item}</li>`).join("\n")}
 
 export function renderTable(block: BlockTable) {
   return `<table>
+  <thead>
+  <tr>
     ${block.data.header.map((cell) => `<th>${cell}</th>`).join("")}
+  </tr>
+  </thead>
+  <tbody>
     ${block.data.rows
       .map(
         (row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>`
       )
-      .join("")}</table>`;
+      .join("")}
+  </tbody>
+</table>`;
 }
 
 export function renderDelimiter(block: BlockDelimiter) {
@@ -82,4 +90,14 @@ export function renderDelimiter(block: BlockDelimiter) {
 
 export function renderHtml(block: BlockHtml) {
   return block.data.html;
+}
+
+export function renderCallout(block: BlockCallout) {
+  const hasTitle = block.data.title !== "";
+
+  return `<div class="callout" data-callout="${block.data.kind}">${
+    hasTitle ? `\n  <div class="callout-title">${block.data.title}</div>` : ""
+  }
+  <div class="callout-content">${block.data.text}</div>
+</div>`.trim();
 }

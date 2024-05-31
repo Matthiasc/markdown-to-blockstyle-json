@@ -52,52 +52,84 @@ http://www.google.com
 
 `;
 
-const basics: { [key: string]: string[] } = {
-  paragraph: ["hello there!", "hello there with [link](http://google.com)"],
-  code: [
-    `\`\`\`javascript
-var name = "me"
-\`\`\`
-  `,
-  ],
-  header: ["# title", "## title "],
-  image: ["![link](pic.jpg)", "![[pic.jpg]]"],
-  quote: [
-    "> This is a blockquote.",
-    `> quote on two
-  > lines`,
-  ],
-  html: [
-    `<div>
+const basics = [
+  { markdown: `hello there!`, html: `<p>hello there!</p>` },
+  { markdown: `# title`, html: `<h1>title</h1>` },
+  { markdown: `## title`, html: `<h2>title</h2>` },
+  {
+    markdown: `![link](http://www.google.com/pic.jpg)`,
+    html: `<img src="http://www.google.com/pic.jpg" alt="link">`,
+  },
+  {
+    markdown: `![[http://www.google.com/pic.jpg]]`,
+    html: `<img src="http://www.google.com/pic.jpg" alt="http://www.google.com/pic.jpg">`,
+  },
+  {
+    markdown: `[link](http://www.google.com)`,
+    html: `<p><a href="http://www.google.com">link</a></p>`,
+  },
+  {
+    markdown: `[[http:///www.google.com]]`,
+    html: `<p><a href="http:///www.google.com">http:///www.google.com</a></p>`,
+  },
+  {
+    markdown: `<div>
     <p>HTML content</p>
   </div>`,
-  ],
-  table: [
-    `| Header1 | Header2 |
-  | ------- | ------- |
-  | Cell1   | Cell2   |`,
-  ],
-  list: [
-    `1. First item
-    2. Second item`,
-  ],
-  callout: [
-    `> [!info]
-> Here's a callout block [link](http://www.google.com).`,
-    `> [! info] with title!
-> Here's a callout block.`,
-  ],
-};
+    html: `<div>
+    <p>HTML content</p>
+  </div>`,
+  },
+  {
+    markdown: `some \`inline\` code`,
+    html: `<p>some <code>inline</code> code</p>`,
+  },
+  {
+    markdown: `http://www.google.com`,
+    html: `<p><a href="http://www.google.com">http://www.google.com</a></p>`,
+  },
+  {
+    markdown: `![image](image.jpeg)`,
+    html: `<img src="image.jpeg" alt="image">`,
+  },
+  {
+    markdown: `| Header1 | Header2 |
+| ------- | ------- |
+| Cell1   | Cell2   |`,
+    html: `<table>
+  <thead>
+  <tr>
+    <th>Header1</th><th>Header2</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr><td>Cell1</td><td>Cell2</td></tr>
+  </tbody>
+</table>`,
+  },
+  {
+    markdown: `> [!info]
+> info message [link](http://www.hello.com)`,
+    html: `<div class="callout" data-callout="info">
+  <div class="callout-content">info message <a href="http://www.hello.com">link</a></div>
+</div>`,
+  },
+  {
+    markdown: `> [!warning] title
+> info message`,
+    html: `<div class="callout" data-callout="warning">
+  <div class="callout-title">title</div>
+  <div class="callout-content">info message</div>
+</div>`,
+  },
+];
 
 describe("parse to blocks", () => {
   it("parses basics", async () => {
-    Object.entries(basics).forEach(([type, values]: [string, string[]]) => {
-      values.forEach((s) => {
-        const { blocks } = parse(s);
-        const res = render(blocks);
-        console.log(res);
-        expect(res).toBeDefined();
-      });
+    basics.forEach(({ markdown, html }) => {
+      const { blocks } = parse(markdown);
+
+      expect(render(blocks)).toBe(html);
     });
   });
 });

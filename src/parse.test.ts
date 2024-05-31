@@ -4,6 +4,7 @@ import { parse } from "./index";
 import {
   BlockCallout,
   BlockHeading,
+  BlockImage,
   BlockParagraph,
   BlockQuote,
 } from "./types";
@@ -132,7 +133,7 @@ describe("parse to blocks", () => {
   it("parses paragraph", async () => {
     const markdown = `hello there [link](http://google.com)`;
     const block = parse(markdown).blocks[0] as BlockParagraph;
-
+    console.log(block.data.text);
     expect(block.type).toBe(`paragraph`);
     expect(block.data.text).toBe(
       `hello there <a href=\"http://google.com\">link</a>`

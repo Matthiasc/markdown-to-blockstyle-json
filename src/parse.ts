@@ -78,7 +78,7 @@ function parseTokensToBlocks(tokens: any[]): Block[] {
         if (isBreakOutElement) {
           //push these tokens already as one block;
           if (noneBreakoutTokenGroup.length) {
-            const b = handleToken({
+            const b = tokenToBlock({
               ...token,
               tokens: noneBreakoutTokenGroup,
             });
@@ -86,7 +86,7 @@ function parseTokensToBlocks(tokens: any[]): Block[] {
           }
 
           //push this as a seperate block
-          const b = handleToken(childToken);
+          const b = tokenToBlock(childToken);
           if (b) blocks.push(b);
 
           //reset the none breakout token group
@@ -97,14 +97,14 @@ function parseTokensToBlocks(tokens: any[]): Block[] {
       });
 
       if (noneBreakoutTokenGroup.length) {
-        const b = handleToken({
+        const b = tokenToBlock({
           ...token,
           tokens: noneBreakoutTokenGroup,
         });
         if (b) blocks.push(b);
       }
     } else {
-      const block = handleToken(token);
+      const block = tokenToBlock(token);
       if (block) blocks.push(block);
     }
   });
@@ -134,7 +134,7 @@ class CustomTokenizer extends Tokenizer {
 }
 
 // Usage example
-function handleToken(token: any) {
+function tokenToBlock(token: any) {
   //@ts-ignore
   if (blockHandlers[token.type]) return blockHandlers[token.type](token);
 
@@ -142,10 +142,12 @@ function handleToken(token: any) {
 }
 
 function parseInlineTokens(tokens: any[]) {
-  return removeOuterHTMLTags(
-    marked
-      //@ts-ignore
-      .parser([{ type: "paragraph", tokens }], _options)
+  return decodeURIComponent(
+    removeOuterHTMLTags(
+      marked
+        //@ts-ignore
+        .parser([{ type: "paragraph", tokens }], _options)
+    )
   );
 }
 
@@ -186,7 +188,7 @@ var blockHandlers = Object.freeze({
   image: (token: any): BlockImage => ({
     type: "image",
     data: {
-      src: token.href,
+      src: decodeURIComponent(token.href),
       caption: token.text,
     },
   }),
