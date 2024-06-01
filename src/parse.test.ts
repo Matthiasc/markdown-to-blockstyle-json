@@ -5,53 +5,11 @@ import {
   BlockCallout,
   BlockHeading,
   BlockImage,
+  BlockList,
   BlockParagraph,
   BlockQuote,
+  BlockTable,
 } from "./types";
-
-// Example usage
-const markdown = `
-# Heading 1
-
-This is a paragraph with an ![image](image.png) inside it and a [link](http://www.google.com).
-
-## Heading 2
-
-Another paragraph with a \`code\` snippet inside.
-
-\`\`\`javascript
-console.log('Hello, world!');
-\`\`\`
-
-> This is a blockquote with a [link](http://www.google.com).
-
-1. First item
-2. Second item
-
-| Header1 | Header2 |
-| ------- | ------- |
-| Cell1   | Cell2   |
-
----
-
-This is a paragraph with an HTML block:
-
-<div>
-  <p>HTML content</p>
-</div>
-
-some \`inline\` code
-
-http://www.google.com
-
-![image](image.jpeg)
-
-
-> [!info]
-> info message
-> info message [link](http://www.hello.com)
-
-`;
 
 const basics: { [key: string]: string[] } = {
   paragraph: ["hello there!", "hello there with [link](http://google.com)"],
@@ -61,8 +19,20 @@ const basics: { [key: string]: string[] } = {
   \`\`\`
   `,
   ],
-  header: ["# title", "## title "],
-  image: ["![link](pic.jpg)", "![[pic.jpg]]"],
+  header: [
+    "# title",
+    "## title ",
+    "### title ",
+    "#### title ",
+    "#### title ",
+    "##### title ",
+  ],
+  image: [
+    "![link](pic.jpg)",
+    "![[pic.jpg]]",
+    "![link](https://www.domain.com/pic.jpg)",
+    "![[https://www.domain.com/pic.jpg]]",
+  ],
   quote: [
     "> This is a blockquote.",
     `> quote on two
@@ -100,6 +70,7 @@ describe("parse to blocks", () => {
       });
     });
   });
+
   it("parses title", async () => {
     const markdown = `# title`;
     const block = parse(markdown).blocks[0] as BlockHeading;
@@ -115,12 +86,14 @@ describe("parse to blocks", () => {
     expect(block.data.level).toBe(1);
     expect(block.data.text).toBe("title");
   });
+
   it("parses quote", async () => {
     const markdown = `> saying`;
     const block = parse(markdown).blocks[0] as BlockQuote;
     expect(block.type).toBe(`quote`);
     expect(block.data.text).toBe("saying");
   });
+
   it("parses callout", async () => {
     const markdown = `> [! info] with title!
 > a callout block.`;
@@ -130,6 +103,7 @@ describe("parse to blocks", () => {
     expect(block.data.kind).toBe("info");
     expect(block.data.text).toBe("a callout block.");
   });
+
   it("parses paragraph", async () => {
     const markdown = `hello there [link](http://google.com)`;
     const block = parse(markdown).blocks[0] as BlockParagraph;
@@ -139,7 +113,7 @@ describe("parse to blocks", () => {
       `hello there <a href=\"http://google.com\">link</a>`
     );
   });
-  //   //parse image and table
+
   it("parses image", async () => {
     const markdown = `![image](image.png)`;
     const { blocks } = parse(markdown);
@@ -148,7 +122,7 @@ describe("parse to blocks", () => {
     expect(block.data.src).toBe("image.png");
   });
 
-  it("parses table", async () => {
+  it("parses table with header", async () => {
     const markdown = `| Header1 | Header2 | Header3 |
   | ------- | ------- | ------- |
   | Cell1   | Cell2   | Cell3   |`;
@@ -173,6 +147,24 @@ describe("parse to blocks", () => {
     expect(blocks[0].type).toBe(`paragraph`);
     expect(blocks[1].type).toBe(`image`);
   });
+
+  it("parses list", async () => {
+    const markdown = `1. First item
+2. Second item`;
+    const { blocks } = parse(markdown);
+    const block = blocks[0] as BlockList;
+    expect(block.type).toBe(`list`);
+    expect(block.data.style).toBe("ordered");
+    expect(block.data.items).toEqual(["First item", "Second item"]);
+  });
+
+  it("parses unordered list", async () => {
+    const markdown = `- First item
+- Second item`;
+    const { blocks } = parse(markdown);
+    const block = blocks[0] as BlockList;
+    expect(block.type).toBe(`list`);
+    expect(block.data.style).toBe("unordered");
+    expect(block.data.items).toEqual(["First item", "Second item"]);
+  });
 });
-// const result = parse(markdown_2);
-// console.log(JSON.stringify(result, null, 2));
