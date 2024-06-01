@@ -92,7 +92,8 @@ export type Block =
   | BlockTable
   | BlockQuote
   | BlockCallout
-  | BlockDelimiter;
+  | BlockDelimiter
+  | BlockHtml;
 
 export type Blocks = {
   [key: string]: (token: any) => Block;

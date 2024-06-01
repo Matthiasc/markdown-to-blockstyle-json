@@ -33,7 +33,7 @@ export function render(
 
   return blocks
     .map((b) => {
-      const renderFunction = renderFunctions[b.type];
+      const renderFunction: (b: any) => string = renderFunctions[b.type];
       if (renderFunction) return renderFunction(b);
       return "";
     })
