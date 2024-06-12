@@ -80,10 +80,10 @@ export function renderImage(block: BlockImage, options?: RenderOptions) {
   return `<figure>
   <img src="${block.data.src}" alt="${block.data.caption}"${
     lazyLoadImages ? " loading='lazy'" : ""
-  }>
-  ${
+  }>${
     block.data.caption?.length
-      ? `<figcaption>${block.data.caption}</figcaption>`
+      ? `
+  <figcaption>${block.data.caption}</figcaption>`
       : ""
   }
 </figure>`;

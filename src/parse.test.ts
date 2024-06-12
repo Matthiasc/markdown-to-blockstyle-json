@@ -32,6 +32,7 @@ const basics: { [key: string]: string[] } = {
     "![[pic.jpg]]",
     "![link](https://www.domain.com/pic.jpg)",
     "![[https://www.domain.com/pic.jpg]]",
+    "![[image.jpg|cool image]]",
   ],
   quote: [
     "> This is a blockquote.",
@@ -115,11 +116,30 @@ describe("parse to blocks", () => {
   });
 
   it("parses image", async () => {
-    const markdown = `![image](image.png)`;
+    const markdown = `![image.png](image.png)`;
     const { blocks } = parse(markdown);
     const block = blocks[0] as BlockImage;
     expect(block.type).toBe(`image`);
     expect(block.data.src).toBe("image.png");
+    expect(block.data.caption).toBe("image.png");
+  });
+
+  it("parses obsidian image", async () => {
+    const markdown = `![[image.png]]`;
+    const { blocks } = parse(markdown);
+    const block = blocks[0] as BlockImage;
+    expect(block.type).toBe(`image`);
+    expect(block.data.src).toBe("image.png");
+    expect(block.data.caption).toBe("");
+  });
+
+  it("parses obsidian image", async () => {
+    const markdown = `![[image.png|cool image]]`;
+    const { blocks } = parse(markdown);
+    const block = blocks[0] as BlockImage;
+    expect(block.type).toBe(`image`);
+    expect(block.data.src).toBe("image.png");
+    expect(block.data.caption).toBe("cool image");
   });
 
   it("parses table with header", async () => {

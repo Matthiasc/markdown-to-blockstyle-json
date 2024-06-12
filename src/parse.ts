@@ -33,15 +33,23 @@ export function parse(
   options?: {
     transformLink?: (link: string) => string;
     removeComments?: boolean;
+    defaultImageLinkAsCaption?: boolean;
   }
 ) {
-  const { transformLink, removeComments } = options || {};
+  const {
+    transformLink,
+    removeComments,
+    defaultImageLinkAsCaption = false,
+  } = options || {};
 
   // remove the most common zerowidth characters from the start of the file (might interfere with marked parsing otherwise)
   markdown = markdown.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]/, "");
 
   //transform to regular markdown
-  markdown = omtm(markdown, true);
+  markdown = omtm(markdown, {
+    defaultImageLinkAsCaption,
+    urlEncodeUri: true,
+  });
 
   if (removeComments) markdown = markdown.replace(/<!--[\s\S]*?-->/g, "");
 
@@ -127,7 +135,10 @@ class CustomTokenizer extends Tokenizer {
     const res = super.link.call(this, src);
 
     if (res) {
-      if (this.transformLink) res.href = this.transformLink(res.href) as string;
+      if (this.transformLink) {
+        res.originalHref = res.href;
+        res.href = this.transformLink(res.href) as string;
+      }
       return res;
     }
   }
@@ -185,14 +196,16 @@ var blockHandlers = Object.freeze({
     },
   }),
 
-  image: (token: any): BlockImage => ({
-    type: "image",
-    data: {
-      src: decodeURIComponent(token.href),
-      caption: token.text,
-    },
+  image: (token: any): BlockImage => {
+    return {
+      type: "image",
+      data: {
+        src: decodeURIComponent(token.href),
+        caption: token.text,
+      },
+    };
     //TODO: add width and height
-  }),
+  },
 
   code: (token: any): BlockCode => ({
     type: "code",

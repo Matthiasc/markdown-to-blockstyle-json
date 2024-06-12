@@ -67,8 +67,14 @@ const basics = [
   {
     markdown: `![[http://www.google.com/pic.jpg]]`,
     html: `<figure>
-  <img src="http://www.google.com/pic.jpg" alt="http://www.google.com/pic.jpg">
-  <figcaption>http://www.google.com/pic.jpg</figcaption>
+  <img src="http://www.google.com/pic.jpg" alt="">
+</figure>`,
+  },
+  {
+    markdown: `![[http://www.google.com/pic.jpg|my caption]]`,
+    html: `<figure>
+  <img src="http://www.google.com/pic.jpg" alt="my caption">
+  <figcaption>my caption</figcaption>
 </figure>`,
   },
   {
