@@ -48,7 +48,7 @@ export function parse(
   _options = {
     gfm: true,
     tokenizer: new CustomTokenizer({
-      transformLink: transformLink,
+      transformLink,
     }),
   };
 
@@ -191,6 +191,7 @@ var blockHandlers = Object.freeze({
       src: decodeURIComponent(token.href),
       caption: token.text,
     },
+    //TODO: add width and height
   }),
 
   code: (token: any): BlockCode => ({

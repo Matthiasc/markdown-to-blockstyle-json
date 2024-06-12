@@ -38,14 +38,29 @@ export type RenderFunctions = {
   callout?: (block: BlockCallout) => string;
 };
 
-export function render(blocks: Block[], renderFunctions: RenderFunctions) {
+export type RenderOptions = {
+  lazyLoadImages?: boolean;
+};
+
+const defaultRenderOptions = Object.freeze({
+  lazyLoadImages: true,
+});
+
+export function render(
+  blocks: Block[],
+  renderFunctions?: RenderFunctions,
+  options?: RenderOptions
+) {
   renderFunctions = { ...defaultRenderFunctions, ...renderFunctions };
+  options = { ...defaultRenderOptions, ...options };
 
   return blocks
     .map((b) => {
-      const renderFunction: undefined | ((b: any) => string) =
+      const renderFunction:
+        | undefined
+        | ((b: any, options: RenderOptions) => string) =
         renderFunctions[b.type];
-      if (renderFunction) return renderFunction(b);
+      if (renderFunction) return renderFunction(b, options);
       return "";
     })
     .join("\n");
@@ -59,9 +74,13 @@ export function renderHeader(block: BlockHeading) {
   return `<h${block.data.level}>${block.data.text}</h${block.data.level}>`;
 }
 
-export function renderImage(block: BlockImage) {
+export function renderImage(block: BlockImage, options?: RenderOptions) {
+  const { lazyLoadImages = true } = options || {};
+
   return `<figure>
-  <img src="${block.data.src}" alt="${block.data.caption}">
+  <img src="${block.data.src}" alt="${block.data.caption}"${
+    lazyLoadImages ? " loading='lazy'" : ""
+  }>
   ${
     block.data.caption?.length
       ? `<figcaption>${block.data.caption}</figcaption>`

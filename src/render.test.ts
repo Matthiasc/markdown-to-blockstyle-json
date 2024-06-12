@@ -7,6 +7,7 @@ import {
   BlockParagraph,
   BlockQuote,
 } from "./types";
+import { RenderOptions } from "./render";
 
 // Example usage
 const markdown = `
@@ -133,12 +134,16 @@ const basics = [
   },
 ];
 
+const renderOptions: RenderOptions = {
+  lazyLoadImages: false,
+};
+
 describe("parse to blocks", () => {
   it("parses basics", async () => {
     basics.forEach(({ markdown, html }) => {
       const { blocks } = parse(markdown);
 
-      expect(render(blocks)).toBe(html);
+      expect(render(blocks, {}, renderOptions)).toBe(html);
     });
   });
 });

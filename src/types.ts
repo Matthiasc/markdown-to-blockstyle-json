@@ -19,6 +19,8 @@ export type BlockImage = {
     src: string;
     caption?: string;
   };
+  width?: number;
+  height?: number;
 };
 
 export type BlockCode = {
