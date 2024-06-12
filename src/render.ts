@@ -52,15 +52,15 @@ export function render(
   options?: RenderOptions
 ) {
   renderFunctions = { ...defaultRenderFunctions, ...renderFunctions };
-  options = { ...defaultRenderOptions, ...options };
+  options = { ...defaultRenderOptions, ...options } as RenderOptions;
 
   return blocks
     .map((b) => {
       const renderFunction:
         | undefined
         | ((b: any, options: RenderOptions) => string) =
-        renderFunctions[b.type];
-      if (renderFunction) return renderFunction(b, options);
+        renderFunctions?.[b.type];
+      if (renderFunction) return renderFunction(b, options as RenderOptions);
       return "";
     })
     .join("\n");
