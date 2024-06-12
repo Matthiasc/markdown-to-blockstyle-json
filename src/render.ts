@@ -25,15 +25,26 @@ const defaultRenderFunctions = Object.freeze({
   callout: renderCallout,
 });
 
-export function render(
-  blocks: Block[],
-  renderFunctions = defaultRenderFunctions
-) {
+export type RenderFunctions = {
+  paragraph?: (block: BlockParagraph) => string;
+  header?: (block: BlockHeading) => string;
+  image?: (block: BlockImage) => string;
+  code?: (block: BlockCode) => string;
+  quote?: (block: BlockQuote) => string;
+  list?: (block: BlockList) => string;
+  table?: (block: BlockTable) => string;
+  delimiter?: (block: BlockDelimiter) => string;
+  html?: (block: BlockHtml) => string;
+  callout?: (block: BlockCallout) => string;
+};
+
+export function render(blocks: Block[], renderFunctions: RenderFunctions) {
   renderFunctions = { ...defaultRenderFunctions, ...renderFunctions };
 
   return blocks
     .map((b) => {
-      const renderFunction: (b: any) => string = renderFunctions[b.type];
+      const renderFunction: undefined | ((b: any) => string) =
+        renderFunctions[b.type];
       if (renderFunction) return renderFunction(b);
       return "";
     })
