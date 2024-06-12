@@ -49,7 +49,14 @@ export function renderHeader(block: BlockHeading) {
 }
 
 export function renderImage(block: BlockImage) {
-  return `<img src="${block.data.src}" alt="${block.data.caption}">`;
+  return `<figure>
+  <img src="${block.data.src}" alt="${block.data.caption}">
+  ${
+    block.data.caption?.length
+      ? `<figcaption>${block.data.caption}</figcaption>`
+      : ""
+  }
+</figure>`;
 }
 
 export function renderCode(block: BlockCode) {

@@ -58,11 +58,17 @@ const basics = [
   { markdown: `## title`, html: `<h2>title</h2>` },
   {
     markdown: `![link](http://www.google.com/pic.jpg)`,
-    html: `<img src="http://www.google.com/pic.jpg" alt="link">`,
+    html: `<figure>
+  <img src="http://www.google.com/pic.jpg" alt="link">
+  <figcaption>link</figcaption>
+</figure>`,
   },
   {
     markdown: `![[http://www.google.com/pic.jpg]]`,
-    html: `<img src="http://www.google.com/pic.jpg" alt="http://www.google.com/pic.jpg">`,
+    html: `<figure>
+  <img src="http://www.google.com/pic.jpg" alt="http://www.google.com/pic.jpg">
+  <figcaption>http://www.google.com/pic.jpg</figcaption>
+</figure>`,
   },
   {
     markdown: `[link](http://www.google.com)`,
@@ -90,7 +96,10 @@ const basics = [
   },
   {
     markdown: `![image](image.jpeg)`,
-    html: `<img src="image.jpeg" alt="image">`,
+    html: `<figure>
+  <img src="image.jpeg" alt="image">
+  <figcaption>image</figcaption>
+</figure>`,
   },
   {
     markdown: `| Header1 | Header2 |

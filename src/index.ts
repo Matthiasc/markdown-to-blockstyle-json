@@ -1,3 +1,3 @@
-export { render } from "./render";
-export { parse } from "./parse";
-export * from "./types";
+export { render } from "./render.js";
+export { parse } from "./parse.js";
+export * from "./types.js";
