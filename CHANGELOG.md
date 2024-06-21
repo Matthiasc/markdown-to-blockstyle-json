@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.10](https://github.com/Matthiasc/markdown-to-blockstyle-json/compare/v0.0.9...v0.0.10) (2024-06-21)
+
+
+### Features
+
+* youtube embed ([4030e4f](https://github.com/Matthiasc/markdown-to-blockstyle-json/commit/4030e4f95acadccff71508625daf26971a85a4d1))
+
 ### [0.0.9](https://github.com/Matthiasc/markdown-to-blockstyle-json/compare/v0.0.8...v0.0.9) (2024-06-12)
 
 
