@@ -140,7 +140,7 @@ const basics = [
 
   {
     markdown: `![](https://www.youtube.com/watch?v=dQw4w9WgXcQ)`,
-    html: `<iframe class="embed embed-youtube" width="900" height="600" src="https://www.youtube.com/watch?v=dQw4w9WgXcQ" frameborder="0" allowfullscreen=""></iframe>`,
+    html: `<iframe width="900" height="600 src="https://www.youtube.com/watch?v=dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen=""></iframe>`,
   },
 ];
 
