@@ -1,5 +1,5 @@
 import { expect, it, describe } from "vitest";
-import { extractYouTubeVideoId } from "./extract-YouTube-videoId";
+import { extractYouTubeVideoId } from "./extract-YouTube-videoId.js";
 
 describe("extractYouTubeVideoId", () => {
   const urls_ok = [

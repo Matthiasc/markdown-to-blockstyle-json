@@ -1,6 +1,6 @@
 import { marked, Tokenizer, Lexer, Renderer } from "marked";
 import omtm from "@matthiasc/obsidian-markup-to-markdown";
-import { extractYouTubeVideoId } from "./extract-YouTube-videoId";
+import { extractYouTubeVideoId } from "./extract-YouTube-videoId.js";
 
 import {
   Block,
