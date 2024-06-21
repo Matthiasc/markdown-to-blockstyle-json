@@ -1,6 +1,6 @@
 {
   "name": "@matthiasc/markdown-to-blockstyle-json",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "parse (obsidian) markdown to blockstyle json",
   "main": "./lib/cjs/index.js",
   "types": "./lib/cjs/types/index.d.ts",
