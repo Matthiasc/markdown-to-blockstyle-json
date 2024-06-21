@@ -15,9 +15,9 @@ const basics: { [key: string]: string[] } = {
   paragraph: ["hello there!", "hello there with [link](http://google.com)"],
   code: [
     `\`\`\`javascript
-  var name = "me"
-  \`\`\`
-  `,
+    var name = "me"
+    \`\`\`
+    `,
   ],
   header: [
     "# title",
@@ -37,28 +37,29 @@ const basics: { [key: string]: string[] } = {
   quote: [
     "> This is a blockquote.",
     `> quote on two
-  > lines`,
+    > lines`,
   ],
   html: [
     `<div>
-    <p>HTML content</p>
-  </div>`,
+      <p>HTML content</p>
+    </div>`,
   ],
   table: [
     `| Header1 | Header2 |
-  | ------- | ------- |
-  | Cell1   | Cell2   |`,
+| ------- | ------- |
+| Cell1   | Cell2   |`,
   ],
   list: [
     `1. First item
-    2. Second item`,
+      2. Second item`,
   ],
   callout: [
     `> [!info]
-> Here's a callout block [link](http://www.google.com).`,
+  > Here's a callout block [link](http://www.google.com).`,
     `> [! info] with title!
-> Here's a callout block.`,
+  > Here's a callout block.`,
   ],
+  embed: [`![](https://www.youtube.com/watch?v=dQw4w9WgXcQ)`],
 };
 
 describe("parse to blocks", () => {
@@ -66,7 +67,7 @@ describe("parse to blocks", () => {
     Object.entries(basics).forEach(([type, values]: [string, string[]]) => {
       values.forEach((s) => {
         const { blocks } = parse(s);
-        console.log(blocks);
+        // console.log("BLOCKS", blocks);
         expect(blocks[0].type).toBe(type);
       });
     });
@@ -96,8 +97,7 @@ describe("parse to blocks", () => {
   });
 
   it("parses callout", async () => {
-    const markdown = `> [! info] with title!
-> a callout block.`;
+    const markdown = `> [! info] with title!\n> a callout block.`;
     const block = parse(markdown).blocks[0] as BlockCallout;
     expect(block.type).toBe(`callout`);
     expect(block.data.title).toBe("with title!");
@@ -144,8 +144,8 @@ describe("parse to blocks", () => {
 
   it("parses table with header", async () => {
     const markdown = `| Header1 | Header2 | Header3 |
-  | ------- | ------- | ------- |
-  | Cell1   | Cell2   | Cell3   |`;
+| ------- | ------- | ------- |
+| Cell1   | Cell2   | Cell3   |`;
     const { blocks } = parse(markdown);
     const block = blocks[0] as BlockTable;
     expect(block.type).toBe(`table`);
@@ -170,7 +170,7 @@ describe("parse to blocks", () => {
 
   it("parses list", async () => {
     const markdown = `1. First item
-2. Second item`;
+  2. Second item`;
     const { blocks } = parse(markdown);
     const block = blocks[0] as BlockList;
     expect(block.type).toBe(`list`);
@@ -179,8 +179,8 @@ describe("parse to blocks", () => {
   });
 
   it("parses unordered list", async () => {
-    const markdown = `- First item
-- Second item`;
+    const markdown = ` - First item
+  - Second item`;
     const { blocks } = parse(markdown);
     const block = blocks[0] as BlockList;
     expect(block.type).toBe(`list`);

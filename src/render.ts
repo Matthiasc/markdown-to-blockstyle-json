@@ -10,6 +10,7 @@ import {
   BlockTable,
   BlockHtml,
   BlockDelimiter,
+  BlockEmbed,
 } from "./types";
 
 const defaultRenderFunctions = Object.freeze({
@@ -23,6 +24,7 @@ const defaultRenderFunctions = Object.freeze({
   delimiter: renderDelimiter,
   html: renderHtml,
   callout: renderCallout,
+  embed: renderEmbed,
 });
 
 export type RenderFunctions = {
@@ -40,6 +42,10 @@ export type RenderFunctions = {
 
 export type RenderOptions = {
   lazyLoadImages?: boolean;
+  embedYoutubeDimensions?: {
+    width: number;
+    height: number;
+  };
 };
 
 const defaultRenderOptions = Object.freeze({
@@ -87,6 +93,15 @@ export function renderImage(block: BlockImage, options?: RenderOptions) {
       : ""
   }
 </figure>`;
+}
+
+export function renderEmbed(block: BlockEmbed, options?: RenderOptions) {
+  // return `<iframe class="embed embed-${block.data.service}" width="900" height="507" src="${block.data.url}" frameborder="0" allowfullscreen=""></iframe>`;
+  return `<iframe class="embed embed-${block.data.service}" width="${
+    options?.embedYoutubeDimensions?.width || 560
+  }" height="${options?.embedYoutubeDimensions?.height || 315}" src="${
+    block.data.url
+  }" frameborder="0" allowfullscreen=""></iframe>`;
 }
 
 export function renderCode(block: BlockCode) {

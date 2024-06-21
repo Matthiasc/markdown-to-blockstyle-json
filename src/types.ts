@@ -85,6 +85,15 @@ export type BlockHtml = {
   };
 };
 
+export type BlockEmbed = {
+  type: "embed";
+  data: {
+    url: string;
+    service: "youtube";
+    id?: string;
+  };
+};
+
 export type Block =
   | BlockParagraph
   | BlockHeading
@@ -95,7 +104,8 @@ export type Block =
   | BlockQuote
   | BlockCallout
   | BlockDelimiter
-  | BlockHtml;
+  | BlockHtml
+  | BlockEmbed;
 
 export type Blocks = {
   [key: string]: (token: any) => Block;

@@ -46,7 +46,6 @@ http://www.google.com
 
 ![image](image.jpeg)
 
-
 > [!info]
 > info message
 > info message [link](http://www.hello.com)
@@ -138,10 +137,19 @@ const basics = [
   <div class="callout-content">info message</div>
 </div>`,
   },
+
+  {
+    markdown: `![](https://www.youtube.com/watch?v=dQw4w9WgXcQ)`,
+    html: `<iframe class="embed embed-youtube" width="900" height="600" src="https://www.youtube.com/watch?v=dQw4w9WgXcQ" frameborder="0" allowfullscreen=""></iframe>`,
+  },
 ];
 
 const renderOptions: RenderOptions = {
   lazyLoadImages: false,
+  embedYoutubeDimensions: {
+    width: 900,
+    height: 600,
+  },
 };
 
 describe("parse to blocks", () => {

@@ -1,5 +1,6 @@
 import { marked, Tokenizer, Lexer, Renderer } from "marked";
 import omtm from "@matthiasc/obsidian-markup-to-markdown";
+import { extractYouTubeVideoId } from "./extract-YouTube-videoId";
 
 import {
   Block,
@@ -13,6 +14,7 @@ import {
   BlockTable,
   BlockHtml,
   BlockDelimiter,
+  BlockEmbed,
 } from "./types";
 let _options: any;
 
@@ -196,7 +198,20 @@ var blockHandlers = Object.freeze({
     },
   }),
 
-  image: (token: any): BlockImage => {
+  image: (token: any): BlockImage | BlockEmbed => {
+    const youtubeVideoId = extractYouTubeVideoId(token.href);
+
+    if (youtubeVideoId) {
+      return {
+        type: "embed",
+        data: {
+          url: token.href,
+          service: "youtube",
+          id: youtubeVideoId,
+        },
+      };
+    }
+
     return {
       type: "image",
       data: {
