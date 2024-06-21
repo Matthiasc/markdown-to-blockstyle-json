@@ -30,7 +30,7 @@ const defaultRenderFunctions = Object.freeze({
 export type RenderFunctions = {
   paragraph?: (block: BlockParagraph) => string;
   header?: (block: BlockHeading) => string;
-  image?: (block: BlockImage) => string;
+  image?: (block: BlockImage, options?: RenderOptions) => string;
   code?: (block: BlockCode) => string;
   quote?: (block: BlockQuote) => string;
   list?: (block: BlockList) => string;
@@ -38,6 +38,7 @@ export type RenderFunctions = {
   delimiter?: (block: BlockDelimiter) => string;
   html?: (block: BlockHtml) => string;
   callout?: (block: BlockCallout) => string;
+  embed?: (block: BlockEmbed, options?: RenderOptions) => string;
 };
 
 export type RenderOptions = {
