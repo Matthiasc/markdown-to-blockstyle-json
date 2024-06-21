@@ -110,8 +110,10 @@ export function renderEmbed(block: BlockEmbed, options?: RenderOptions) {
 
   return `<iframe width="${
     options?.embedYoutubeDimensions?.width || 560
-  }" height="${options?.embedYoutubeDimensions?.height || 315} src="${
-    block.data.url
+  }" height="${
+    options?.embedYoutubeDimensions?.height || 315
+  }" src="https://www.youtube.com/embed/${
+    block.data.id
   }" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen=""></iframe>`;
 }
 
