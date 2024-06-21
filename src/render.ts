@@ -112,6 +112,8 @@ export function renderEmbed(block: BlockEmbed, options?: RenderOptions) {
     options?.embedYoutubeDimensions?.width || 560
   }" height="${
     options?.embedYoutubeDimensions?.height || 315
+  }" class="embed embed-${
+    block.data.service
   }" src="https://www.youtube.com/embed/${
     block.data.id
   }" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen=""></iframe>`;
