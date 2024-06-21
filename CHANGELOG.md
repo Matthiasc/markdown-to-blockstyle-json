@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.14](https://github.com/Matthiasc/markdown-to-blockstyle-json/compare/v0.0.13...v0.0.14) (2024-06-21)
+
+
+### Features
+
+* add class for embed ([e787522](https://github.com/Matthiasc/markdown-to-blockstyle-json/commit/e787522afea8f96e92cf0d0fdff3d58ab9b54f03))
+
 ### [0.0.13](https://github.com/Matthiasc/markdown-to-blockstyle-json/compare/v0.0.12...v0.0.13) (2024-06-21)
 
 
