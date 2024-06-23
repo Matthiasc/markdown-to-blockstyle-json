@@ -162,6 +162,7 @@ class CustomTokenizer extends Tokenizer {
 function tokenToBlock(token: any, options?: ParseOptions) {
   //@ts-ignore
   if (blockHandlers[token.type])
+    //@ts-ignore
     return blockHandlers[token.type](token, options);
 
   return null;
