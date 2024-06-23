@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.15](https://github.com/Matthiasc/markdown-to-blockstyle-json/compare/v0.0.14...v0.0.15) (2024-06-23)
+
+
+### Features
+
+* imageDimension hook ([043d19e](https://github.com/Matthiasc/markdown-to-blockstyle-json/commit/043d19eaba2d92b749fff53d7824e57e79516bd3))
+
 ### [0.0.14](https://github.com/Matthiasc/markdown-to-blockstyle-json/compare/v0.0.13...v0.0.14) (2024-06-21)
 
 
