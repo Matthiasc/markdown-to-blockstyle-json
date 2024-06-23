@@ -18,9 +18,9 @@ export type BlockImage = {
   data: {
     src: string;
     caption?: string;
+    width?: number;
+    height?: number;
   };
-  width?: number;
-  height?: number;
 };
 
 export type BlockCode = {

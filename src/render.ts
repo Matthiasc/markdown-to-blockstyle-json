@@ -87,6 +87,10 @@ export function renderImage(block: BlockImage, options?: RenderOptions) {
   return `<figure>
   <img src="${block.data.src}" alt="${block.data.caption}"${
     lazyLoadImages ? " loading='lazy'" : ""
+  }${
+    block.data.width && block.data.height
+      ? ` width="${block.data.width}" height="${block.data.height}"`
+      : ""
   }>${
     block.data.caption?.length
       ? `

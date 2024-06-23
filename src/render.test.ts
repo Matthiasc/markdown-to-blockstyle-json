@@ -1,13 +1,8 @@
 //vitest
 import { expect, it, describe } from "vitest";
 import { parse, render } from "./index";
-import {
-  BlockCallout,
-  BlockHeading,
-  BlockParagraph,
-  BlockQuote,
-} from "./types";
 import { RenderOptions } from "./render";
+import { ParseOptions } from "./parse";
 
 // Example usage
 const markdown = `
@@ -59,20 +54,20 @@ const basics = [
   {
     markdown: `![link](http://www.google.com/pic.jpg)`,
     html: `<figure>
-  <img src="http://www.google.com/pic.jpg" alt="link">
+  <img src="http://www.google.com/pic.jpg" alt="link" width="100" height="100">
   <figcaption>link</figcaption>
 </figure>`,
   },
   {
     markdown: `![[http://www.google.com/pic.jpg]]`,
     html: `<figure>
-  <img src="http://www.google.com/pic.jpg" alt="">
+  <img src="http://www.google.com/pic.jpg" alt="" width="100" height="100">
 </figure>`,
   },
   {
     markdown: `![[http://www.google.com/pic.jpg|my caption]]`,
     html: `<figure>
-  <img src="http://www.google.com/pic.jpg" alt="my caption">
+  <img src="http://www.google.com/pic.jpg" alt="my caption" width="100" height="100">
   <figcaption>my caption</figcaption>
 </figure>`,
   },
@@ -103,7 +98,7 @@ const basics = [
   {
     markdown: `![image](image.jpeg)`,
     html: `<figure>
-  <img src="image.jpeg" alt="image">
+  <img src="image.jpeg" alt="image" width="100" height="100">
   <figcaption>image</figcaption>
 </figure>`,
   },
@@ -151,11 +146,16 @@ const renderOptions: RenderOptions = {
     height: 600,
   },
 };
+const parseOptions: ParseOptions = {
+  getImageDimensions: (src) => {
+    return { width: 100, height: 100 };
+  },
+};
 
 describe("parse to blocks", () => {
   it("parses basics", async () => {
     basics.forEach(({ markdown, html }) => {
-      const { blocks } = parse(markdown);
+      const { blocks } = parse(markdown, parseOptions);
 
       expect(render(blocks, {}, renderOptions)).toBe(html);
     });

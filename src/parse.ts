@@ -1,6 +1,7 @@
 import { marked, Tokenizer, Lexer, Renderer } from "marked";
 import omtm from "@matthiasc/obsidian-markup-to-markdown";
 import { extractYouTubeVideoId } from "./extract-YouTube-videoId.js";
+import removeEmptyPropsFromObject from "./remove-empty-props-from-object.js";
 
 import {
   Block,
@@ -28,16 +29,21 @@ let _options: any;
  * @param options
  * @param options.transformLink - transform links/href/src from image and link tags
  * @param options.removeComments - remove comments from the markdown
+ * @param options.getPropsForBlock - get extra or override props for a block
  * @returns
  */
-export function parse(
-  markdown: string,
-  options?: {
-    transformLink?: (link: string) => string;
-    removeComments?: boolean;
-    defaultImageLinkAsCaption?: boolean;
-  }
-) {
+
+export type ParseOptions = {
+  transformLink?: (link: string) => string;
+  removeComments?: boolean;
+  defaultImageLinkAsCaption?: boolean;
+  getImageDimensions?: (src: string) => {
+    width: number;
+    height: number;
+  };
+};
+
+export function parse(markdown: string, options?: ParseOptions) {
   const {
     transformLink,
     removeComments,
@@ -65,7 +71,7 @@ export function parse(
   let tokens = new marked.Lexer(_options).lex(markdown);
 
   // tokens = iterateAndTransformLinks(tokens);
-  const blocks = parseTokensToBlocks(tokens);
+  const blocks = parseTokensToBlocks(tokens, options);
 
   return {
     time: Date.now(),
@@ -73,7 +79,7 @@ export function parse(
   };
 }
 
-function parseTokensToBlocks(tokens: any[]): Block[] {
+function parseTokensToBlocks(tokens: any[], options?: ParseOptions): Block[] {
   const blocks: Block[] = [];
 
   tokens.forEach((token) => {
@@ -88,15 +94,18 @@ function parseTokensToBlocks(tokens: any[]): Block[] {
         if (isBreakOutElement) {
           //push these tokens already as one block;
           if (noneBreakoutTokenGroup.length) {
-            const b = tokenToBlock({
-              ...token,
-              tokens: noneBreakoutTokenGroup,
-            });
+            const b = tokenToBlock(
+              {
+                ...token,
+                tokens: noneBreakoutTokenGroup,
+              },
+              options
+            );
             if (b) blocks.push(b);
           }
 
           //push this as a seperate block
-          const b = tokenToBlock(childToken);
+          const b = tokenToBlock(childToken, options);
           if (b) blocks.push(b);
 
           //reset the none breakout token group
@@ -107,10 +116,13 @@ function parseTokensToBlocks(tokens: any[]): Block[] {
       });
 
       if (noneBreakoutTokenGroup.length) {
-        const b = tokenToBlock({
-          ...token,
-          tokens: noneBreakoutTokenGroup,
-        });
+        const b = tokenToBlock(
+          {
+            ...token,
+            tokens: noneBreakoutTokenGroup,
+          },
+          options
+        );
         if (b) blocks.push(b);
       }
     } else {
@@ -147,9 +159,10 @@ class CustomTokenizer extends Tokenizer {
 }
 
 // Usage example
-function tokenToBlock(token: any) {
+function tokenToBlock(token: any, options?: ParseOptions) {
   //@ts-ignore
-  if (blockHandlers[token.type]) return blockHandlers[token.type](token);
+  if (blockHandlers[token.type])
+    return blockHandlers[token.type](token, options);
 
   return null;
 }
@@ -182,7 +195,7 @@ function parseBlockTokens(tokens: any[]) {
 //   return tokens.reduce((acc, curr) => acc + curr.raw || curr.text, "");
 // }
 
-var blockHandlers = Object.freeze({
+const blockHandlers = Object.freeze({
   paragraph: (token: any): BlockParagraph => ({
     type: "paragraph",
     data: {
@@ -198,25 +211,31 @@ var blockHandlers = Object.freeze({
     },
   }),
 
-  image: (token: any): BlockImage | BlockEmbed => {
-    const youtubeVideoId = extractYouTubeVideoId(token.href);
+  image: (token: any, options?: ParseOptions): BlockImage | BlockEmbed => {
+    const href = decodeURIComponent(token.href);
+
+    const youtubeVideoId = extractYouTubeVideoId(href);
 
     if (youtubeVideoId) {
       return {
         type: "embed",
         data: {
-          url: token.href,
+          url: href,
           service: "youtube",
           id: youtubeVideoId,
         },
       };
     }
 
+    const { width, height } = options?.getImageDimensions?.(href) || {};
+
     return {
       type: "image",
       data: {
-        src: decodeURIComponent(token.href),
+        src: decodeURIComponent(href),
         caption: token.text,
+        width,
+        height,
       },
     };
     //TODO: add width and height
