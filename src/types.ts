@@ -59,15 +59,18 @@ export type BlockCallout = {
   type: "callout";
   data: {
     kind: string;
-    // | "note"
-    // | "abstract"
-    // | "summary"
-    // | "tldr"
-    // | "info"
-    // | "todo"
-    // | "tip"
-    // | "hint"
-    // | "important";
+    // Abstract, summary, tldr
+    // Info
+    // Todo
+    // Tip, hint, important
+    // Success, check, done
+    // Question, help, faq
+    // Warning, caution, attention
+    // Failure, fail, missing
+    // Danger, error
+    // Bug
+    // Example;
+    // Quote;
     title?: string;
     text: string;
   };
