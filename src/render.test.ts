@@ -136,7 +136,6 @@ const basics = [
     markdown: `> [!warning] title`,
     html: `<div class="callout" data-callout="warning">
   <div class="callout-title">title</div>
-  <div class="callout-content"></div>
 </div>`,
   },
 

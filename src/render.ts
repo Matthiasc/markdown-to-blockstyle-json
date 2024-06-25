@@ -168,7 +168,10 @@ export function renderCallout(block: BlockCallout) {
 
   return `<div class="callout" data-callout="${block.data.kind}">${
     hasTitle ? `\n  <div class="callout-title">${block.data.title}</div>` : ""
+  }${
+    block.data.text
+      ? `\n  <div class="callout-content">${block.data.text}</div>`
+      : ""
   }
-  <div class="callout-content">${block.data.text}</div>
 </div>`.trim();
 }
