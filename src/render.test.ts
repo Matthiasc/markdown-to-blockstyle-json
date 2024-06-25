@@ -132,6 +132,13 @@ const basics = [
   <div class="callout-content">info message</div>
 </div>`,
   },
+  {
+    markdown: `> [!warning] title`,
+    html: `<div class="callout" data-callout="warning">
+  <div class="callout-title">title</div>
+  <div class="callout-content"></div>
+</div>`,
+  },
 
   {
     markdown: `![](https://www.youtube.com/watch?v=dQw4w9WgXcQ)`,
