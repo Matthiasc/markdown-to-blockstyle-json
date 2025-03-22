@@ -71,7 +71,6 @@ export function parse(markdown: string, options?: ParseOptions) {
   });
 
   if (removeComments) markdown = markdown.replace(/<!--[\s\S]*?-->/g, "");
-  console.log("markdown", markdown);
 
   _options = {
     gfm: true,
@@ -81,8 +80,7 @@ export function parse(markdown: string, options?: ParseOptions) {
   };
 
   let tokens = new marked.Lexer(_options).lex(markdown);
-  console.log("markdown", markdown);
-  console.log("tokens", tokens[0].tokens);
+
   const blocks = parseTokensToBlocks(tokens, options);
 
   return {
@@ -205,23 +203,16 @@ function parseBlockTokens(tokens: any[]) {
 
 function isBreakOutElement(token: any) {
   if (isInlineElement(token)) return false;
-
+  //@ts-ignore
   return !!blockHandlers[token.type] && token.type !== "paragraph";
 }
 
 function isInlineElement(token: any) {
-  // if (token.type !== "html") return false;
-  console.log("ja");
-
   for (const el of INLINE_ELEMENTS) {
-    console.log("Comparing:", el, "with", token.text.trim()); // Debugging
-
     // Check if the token matches the element or its closing tag
     if (token.text.trim() === el) return true;
     if (token.text.trim() === el.replace("<", "</")) return true;
   }
-  // return false;
-  console.log("NO");
 
   return false;
 }
