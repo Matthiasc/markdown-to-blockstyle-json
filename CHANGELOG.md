@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.20](https://github.com/Matthiasc/markdown-to-blockstyle-json/compare/v0.0.19...v0.0.20) (2025-03-22)
+
+
+### Bug Fixes
+
+* cleanup ([a7c90d5](https://github.com/Matthiasc/markdown-to-blockstyle-json/commit/a7c90d579f8a1fec661e26921606137ce7b3d2f8))
+
 ### [0.0.19](https://github.com/Matthiasc/markdown-to-blockstyle-json/compare/v0.0.18...v0.0.19) (2025-03-22)
 
 
