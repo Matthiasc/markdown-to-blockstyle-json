@@ -205,6 +205,8 @@ function isBreakOutElement(token: any) {
 }
 
 function isInlineElement(token: any) {
+  if (!token.text) return false;
+
   for (const el of INLINE_ELEMENTS) {
     // Check if the token matches the element or its closing tag
     if (token.text.trim() === el) return true;
