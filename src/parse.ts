@@ -1,6 +1,7 @@
 import { marked, Tokenizer, Lexer, Renderer } from "marked";
 import omtm from "@matthiasc/obsidian-markup-to-markdown";
 import { extractYouTubeVideoId } from "./extract-YouTube-videoId.js";
+import { removeOuterHTMLTags } from "./utils.js";
 
 import {
   Block,
@@ -15,7 +16,7 @@ import {
   BlockHtml,
   BlockDelimiter,
   BlockEmbed,
-} from "./blocks.js";
+} from "./types.js";
 let _options: any;
 
 const INLINE_ELEMENTS = [
@@ -169,9 +170,9 @@ class CustomTokenizer extends Tokenizer {
 // Usage example
 function tokenToBlock(token: any, options?: ParseOptions) {
   //@ts-ignore
-  if (blockHandlers[token.type])
+  if (BLOCK_HANDLERS[token.type])
     //@ts-ignore
-    return blockHandlers[token.type](token, options);
+    return BLOCK_HANDLERS[token.type](token, options);
 
   return null;
 }
@@ -186,10 +187,6 @@ function parseInlineTokens(tokens: any[]) {
   );
 }
 
-function removeOuterHTMLTags(htmlString: string) {
-  return htmlString.replace(/^\s*<[^>]+>\s*|\s*<\/[^>]+>\s*$/g, "").trim();
-}
-
 function parseBlockTokens(tokens: any[]) {
   return (
     marked
@@ -201,7 +198,7 @@ function parseBlockTokens(tokens: any[]) {
 function isBreakOutElement(token: any) {
   if (isInlineElement(token)) return false;
   //@ts-ignore
-  return !!blockHandlers[token.type] && token.type !== "paragraph";
+  return !!BLOCK_HANDLERS[token.type] && token.type !== "paragraph";
 }
 
 function isInlineElement(token: any) {
@@ -221,7 +218,7 @@ function isInlineElement(token: any) {
 //   return tokens.reduce((acc, curr) => acc + curr.raw || curr.text, "");
 // }
 
-const blockHandlers = Object.freeze({
+const BLOCK_HANDLERS = Object.freeze({
   paragraph: (token: any): BlockParagraph => ({
     type: "paragraph",
     data: {
