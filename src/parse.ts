@@ -97,11 +97,8 @@ function parseTokensToBlocks(tokens: any[], options?: ParseOptions): Block[] {
       let noneBreakoutTokenGroup: any[] = [];
 
       token.tokens.forEach((childToken: any) => {
-        // console.log("childToken", childToken);
-
         const isBreakOutEl = isBreakOutElement(childToken);
 
-        console.log("isBreakOutElement", isBreakOutEl, childToken.type);
         if (isBreakOutEl) {
           //push these tokens already as one block;
           if (noneBreakoutTokenGroup.length) {

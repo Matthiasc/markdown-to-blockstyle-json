@@ -49,6 +49,17 @@ http://www.google.com
 
 const basics = [
   { markdown: `==marked text==`, html: `<p><mark>marked text</mark></p>` },
+  {
+    markdown: `start==marked text==end`,
+    html: `<p>start<mark>marked text</mark>end</p>`,
+  },
+  {
+    markdown: `hello there
+  
+  ==marked text==`,
+    html: `<p>hello there</p>
+<p><mark>marked text</mark></p>`,
+  },
   { markdown: `**bold text**`, html: `<p><strong>bold text</strong></p>` },
   { markdown: `<b>bold text</b>`, html: `<p><b>bold text</b></p>` },
   { markdown: `__bold text__`, html: `<p><strong>bold text</strong></p>` },
@@ -175,5 +186,17 @@ describe("parse to blocks", () => {
 
       expect(render(blocks, {}, renderOptions)).toBe(html);
     });
+  });
+});
+
+describe("parse custom <mark> markdown", () => {
+  it("parses custom markdown", async () => {
+    const markdown = `This is some text
+
+with a ==marked== word`;
+    const { blocks } = parse(markdown);
+
+    expect(render(blocks, {})).toBe(`<p>This is some text</p>
+<p>with a <mark>marked</mark> word</p>`);
   });
 });
