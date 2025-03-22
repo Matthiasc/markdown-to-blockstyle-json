@@ -1,7 +1,6 @@
 import { marked, Tokenizer, Lexer, Renderer } from "marked";
 import omtm from "@matthiasc/obsidian-markup-to-markdown";
 import { extractYouTubeVideoId } from "./extract-YouTube-videoId.js";
-import removeEmptyPropsFromObject from "./remove-empty-props-from-object.js";
 
 import {
   Block,
@@ -16,9 +15,21 @@ import {
   BlockHtml,
   BlockDelimiter,
   BlockEmbed,
-} from "./types";
+} from "./blocks.js";
 let _options: any;
 
+const INLINE_ELEMENTS = [
+  "<mark>",
+  "<b>",
+  // "<strong>",
+  // "<i>",
+  // "<em>",
+  // "<del>",
+  // "<ins>",
+  // "<sub>",
+  // "<sup>",
+  // "<a>",
+];
 /**
  * this will turn markdown or (basic) obsidian markdown into blockstyled json
  * It will make sure that any image will be a block on it's own and pushed out of a paragraph or any other element
@@ -60,6 +71,7 @@ export function parse(markdown: string, options?: ParseOptions) {
   });
 
   if (removeComments) markdown = markdown.replace(/<!--[\s\S]*?-->/g, "");
+  console.log("markdown", markdown);
 
   _options = {
     gfm: true,
@@ -69,8 +81,8 @@ export function parse(markdown: string, options?: ParseOptions) {
   };
 
   let tokens = new marked.Lexer(_options).lex(markdown);
-
-  // tokens = iterateAndTransformLinks(tokens);
+  console.log("markdown", markdown);
+  console.log("tokens", tokens[0].tokens);
   const blocks = parseTokensToBlocks(tokens, options);
 
   return {
@@ -87,11 +99,12 @@ function parseTokensToBlocks(tokens: any[], options?: ParseOptions): Block[] {
       let noneBreakoutTokenGroup: any[] = [];
 
       token.tokens.forEach((childToken: any) => {
-        const isBreakOutElement =
-          //@ts-ignore
-          !!blockHandlers?.[childToken.type] && childToken.type !== "paragraph";
+        // console.log("childToken", childToken);
 
-        if (isBreakOutElement) {
+        const isBreakOutEl = isBreakOutElement(childToken);
+
+        console.log("isBreakOutElement", isBreakOutEl, childToken.type);
+        if (isBreakOutEl) {
           //push these tokens already as one block;
           if (noneBreakoutTokenGroup.length) {
             const b = tokenToBlock(
@@ -190,6 +203,28 @@ function parseBlockTokens(tokens: any[]) {
   );
 }
 
+function isBreakOutElement(token: any) {
+  if (isInlineElement(token)) return false;
+
+  return !!blockHandlers[token.type] && token.type !== "paragraph";
+}
+
+function isInlineElement(token: any) {
+  // if (token.type !== "html") return false;
+  console.log("ja");
+
+  for (const el of INLINE_ELEMENTS) {
+    console.log("Comparing:", el, "with", token.text.trim()); // Debugging
+
+    // Check if the token matches the element or its closing tag
+    if (token.text.trim() === el) return true;
+    if (token.text.trim() === el.replace("<", "</")) return true;
+  }
+  // return false;
+  console.log("NO");
+
+  return false;
+}
 //create typescript  type for the blocks
 
 // function renderTokensToString(tokens: any[]) {

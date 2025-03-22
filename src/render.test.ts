@@ -48,6 +48,16 @@ http://www.google.com
 `;
 
 const basics = [
+  { markdown: `==marked text==`, html: `<p><mark>marked text</mark></p>` },
+  { markdown: `**bold text**`, html: `<p><strong>bold text</strong></p>` },
+  { markdown: `<b>bold text</b>`, html: `<p><b>bold text</b></p>` },
+  { markdown: `__bold text__`, html: `<p><strong>bold text</strong></p>` },
+  { markdown: `*emph text*`, html: `<p><em>emph text</em></p>` },
+  { markdown: `_emph text_`, html: `<p><em>emph text</em></p>` },
+  {
+    markdown: `~~strikethrough text~~`,
+    html: `<p><del>strikethrough text</del></p>`,
+  },
   { markdown: `hello there!`, html: `<p>hello there!</p>` },
   { markdown: `# title`, html: `<h1>title</h1>` },
   { markdown: `## title`, html: `<h2>title</h2>` },

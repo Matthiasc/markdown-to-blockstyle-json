@@ -11,7 +11,7 @@ import {
   BlockHtml,
   BlockDelimiter,
   BlockEmbed,
-} from "./types";
+} from "./blocks";
 
 const defaultRenderFunctions = Object.freeze({
   paragraph: renderParagraph,
