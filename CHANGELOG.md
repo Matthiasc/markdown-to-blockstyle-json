@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.21](https://github.com/Matthiasc/markdown-to-blockstyle-json/compare/v0.0.20...v0.0.21) (2025-03-22)
+
+
+### Bug Fixes
+
+* bug inlineElement ([87677fa](https://github.com/Matthiasc/markdown-to-blockstyle-json/commit/87677fab63bcd4ba75549aab9ceead94102ed403))
+
 ### [0.0.20](https://github.com/Matthiasc/markdown-to-blockstyle-json/compare/v0.0.19...v0.0.20) (2025-03-22)
 
 
