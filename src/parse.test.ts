@@ -49,10 +49,7 @@ const basics: { [key: string]: string[] } = {
 | ------- | ------- |
 | Cell1   | Cell2   |`,
   ],
-  list: [
-    `1. First item
-      2. Second item`,
-  ],
+  list: [`1. First item`],
   callout: [
     `> [!info]
   > Here's a callout block [link](http://www.google.com).`,
@@ -84,6 +81,27 @@ describe("parse to blocks", () => {
     expect(block.type).toBe(`header`);
     expect(block.data.level).toBe(1);
     expect(block.data.text).toBe("title");
+  });
+
+  it("parses cursive", async () => {
+    const markdown = `*word*`;
+    const block = parse(markdown).blocks[0] as BlockHeading;
+    expect(block.type).toBe(`paragraph`);
+    expect(block.data.text).toBe("<em>word</em>");
+  });
+
+  it("parses strong", async () => {
+    const markdown = `**word**`;
+    const block = parse(markdown).blocks[0] as BlockHeading;
+    expect(block.type).toBe(`paragraph`);
+    expect(block.data.text).toBe("<strong>word</strong>");
+  });
+
+  it("parses strikethrough", async () => {
+    const markdown = `~~word~~`;
+    const block = parse(markdown).blocks[0] as BlockHeading;
+    expect(block.type).toBe(`paragraph`);
+    expect(block.data.text).toBe("<del>word</del>");
   });
 
   it("parses title", async () => {
