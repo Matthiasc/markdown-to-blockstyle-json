@@ -3,6 +3,7 @@ import { expect, it, describe } from "vitest";
 import { parse } from "./index";
 import {
   BlockCallout,
+  BlockEmbed,
   BlockHeading,
   BlockImage,
   BlockList,
@@ -252,5 +253,69 @@ hello ==marked text== there
     }
   }
 ]`);
+  });
+});
+
+describe("additional parsing edge cases", () => {
+  it("splits multiple inline images out of a single paragraph", () => {
+    const markdown = `before ![one](one.png) middle ![two](two.png) after`;
+    const { blocks } = parse(markdown);
+    expect(blocks.map((b) => b.type)).toEqual([
+      "paragraph",
+      "image",
+      "paragraph",
+      "image",
+      "paragraph",
+    ]);
+    expect((blocks[1] as BlockImage).data.src).toBe("one.png");
+    expect((blocks[3] as BlockImage).data.src).toBe("two.png");
+    expect((blocks[0] as BlockParagraph).data.text).toBe("before");
+    expect((blocks[2] as BlockParagraph).data.text).toBe("middle");
+    expect((blocks[4] as BlockParagraph).data.text).toBe("after");
+  });
+
+  it("does not break out inline <mark> or <b> elements as separate blocks", () => {
+    const markdown = `a <mark>tagged</mark> and <b>bold</b> text`;
+    const { blocks } = parse(markdown);
+    expect(blocks.length).toBe(1);
+    const p = blocks[0] as BlockParagraph;
+    expect(p.type).toBe("paragraph");
+    expect(p.data.text).toBe("a <mark>tagged</mark> and <b>bold</b> text");
+  });
+
+  it("handles callout without title", () => {
+    const markdown = `> [!warning]\n> Be careful`;
+    const block = parse(markdown).blocks[0] as BlockCallout;
+    expect(block.type).toBe("callout");
+    expect(block.data.kind).toBe("warning");
+    expect(block.data.title).toBe("");
+    expect(block.data.text).toBe("Be careful");
+  });
+
+  it("handles callout with multi-line body", () => {
+    const markdown = `> [!note] title\n> first line\n> second line`;
+    const block = parse(markdown).blocks[0] as BlockCallout;
+    expect(block.type).toBe("callout");
+    expect(block.data.kind).toBe("note");
+    expect(block.data.title).toBe("title");
+    expect(block.data.text).toBe("first line\nsecond line");
+  });
+
+  it("embeds YouTube when image href is a YouTube URL", () => {
+    const markdown = `![](https://www.youtube.com/watch?v=dQw4w9WgXcQ)`;
+    const { blocks } = parse(markdown);
+    expect(blocks[0].type).toBe("embed");
+    const embed = blocks[0] as BlockEmbed;
+    expect(embed.data.service).toBe("youtube");
+    expect(embed.data.id).toBe("dQw4w9WgXcQ");
+  });
+
+  //TODO: this should keep as 1 paragraph block
+  it.skip("keeps regular link as paragraph (no embed)", () => {
+    const markdown = `See this <a href=\"https://www.youtube.com/watch?v=dQw4w9WgXcQ\">link</a>`;
+    const { blocks } = parse(markdown);
+    console.log(blocks);
+    expect(blocks.length).toBe(1);
+    expect(blocks[0].type).toBe("paragraph");
   });
 });
